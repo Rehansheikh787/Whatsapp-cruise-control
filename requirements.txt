@@ -1,0 +1,16 @@
+# Core RAG & Database
+chromadb[server]
+sentence-transformers
+torch
+
+# LLM & Agent
+google-genai
+python-dotenv
+pytest
+
+# Bridge Server (Node-to-Python)
+flask
+
+# Cruise Control Console
+streamlit
+streamlit-autorefresh

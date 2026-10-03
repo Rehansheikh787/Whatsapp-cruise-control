@@ -1,0 +1,35 @@
+{
+  "sender_name": "@Rehan Sheikh",
+  "source_file": "WhatsApp Chats/Chats with hindi friends/WhatsApp Chat with Mobeen Ahmed/WhatsApp Chat with Mobeen Ahmed.txt",
+  "total_sample_size": 602,
+  "hinglish_messages_count": 250,
+  "hinglish_ratio": 0.4153,
+  "hinglish_percentage": 41.53,
+  "average_message_length_words": 3.96,
+  "top_15_emojis": [
+    {
+      "emoji": "😂",
+      "count": 3
+    },
+    {
+      "emoji": "👇🏼",
+      "count": 2
+    },
+    {
+      "emoji": "👍",
+      "count": 2
+    },
+    {
+      "emoji": "👉",
+      "count": 1
+    },
+    {
+      "emoji": "🎁",
+      "count": 1
+    },
+    {
+      "emoji": "💁",
+      "count": 1
+    }
+  ]
+}

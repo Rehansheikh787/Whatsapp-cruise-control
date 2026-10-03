@@ -1,0 +1,71 @@
+{
+  "sender_name": "@Rehan Sheikh",
+  "source_file": "WhatsApp Chats/Chats with marathi friends/WhatsApp Chat with Ritik Choudhary/WhatsApp Chat with Ritik Choudhary.txt",
+  "total_sample_size": 1470,
+  "hinglish_messages_count": 278,
+  "hinglish_ratio": 0.1891,
+  "hinglish_percentage": 18.91,
+  "average_message_length_words": 4.4,
+  "top_15_emojis": [
+    {
+      "emoji": "😂",
+      "count": 37
+    },
+    {
+      "emoji": "🙏",
+      "count": 15
+    },
+    {
+      "emoji": "🎂",
+      "count": 12
+    },
+    {
+      "emoji": "😁",
+      "count": 11
+    },
+    {
+      "emoji": "👍",
+      "count": 9
+    },
+    {
+      "emoji": "🌚",
+      "count": 6
+    },
+    {
+      "emoji": "🎉",
+      "count": 5
+    },
+    {
+      "emoji": "😡",
+      "count": 5
+    },
+    {
+      "emoji": "😍",
+      "count": 4
+    },
+    {
+      "emoji": "😅",
+      "count": 3
+    },
+    {
+      "emoji": "🥳",
+      "count": 3
+    },
+    {
+      "emoji": "👀",
+      "count": 2
+    },
+    {
+      "emoji": "😃",
+      "count": 2
+    },
+    {
+      "emoji": "😄",
+      "count": 2
+    },
+    {
+      "emoji": "😊",
+      "count": 2
+    }
+  ]
+}
