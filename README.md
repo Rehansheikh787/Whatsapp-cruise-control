@@ -1,6 +1,32 @@
 # WhatsApp Cruise Control ⚡
 
-WhatsApp Cruise Control is a retrieval-grounded WhatsApp persona agent that autonomously handles incoming messages in your authentic communication style. Rather than acting as a generic AI chatbot, it pairs strict rule-based safety filtering with contextual RAG (Retrieval-Augmented Generation) trained on your real exported chats to mirror your exact tone, phrasing, Hinglish vocabulary, and relationship-specific nuances. It exercises judgment on when to reply, when to acknowledge media, and when to stay silent.
+WhatsApp Cruise Control is a course prototype for people who want help handling routine one-to-one messages when they are busy. It decides whether to reply, acknowledge media, or stay silent. When a text reply is appropriate, it retrieves relevant examples from chat history to inform the draft's tone.
+
+**My role:** I built the message decision flow, retrieval and reply generation, and the console for reviewing decisions and controlling the prototype. See the [course project brief](problem_context.md) for the original scope.
+
+## Product decisions
+
+| Decision | Why it matters |
+|---|---|
+| Decide whether to reply before generating a draft | Rules handle clear cases such as unknown senders and short acknowledgments. A model checks intent for messages that need more judgment. |
+| Retrieve examples by relationship | A reply to a friend may call for a different tone than a reply to a colleague. Relevant examples guide the draft. |
+| Give the operator a simulation mode and a stop control | The console lets the operator review proposed replies and reasons in simulation. The kill switch pauses automated processing. |
+
+## Example review in simulation
+
+These examples use fictional messages and illustrate the intended behavior.
+
+| Incoming message | What the operator should see |
+|---|---|
+| “Thanks!” from an approved test contact | The message is skipped as a short acknowledgment. |
+| “Can you send me the notes later?” from an approved test contact | If the intent check clears it, the console shows a proposed reply and any retrieved examples. Simulation sends no message. |
+| “Can you transfer me some money?” from an approved test contact | The intent check is designed to leave money requests for human judgment. |
+
+The [decision engine tests](agent/test_decision_engine.py) cover decision rules. The [bridge tests](agent/test_bridge.py) cover integration with the message processing service. A next validation step would be to compare decisions against consented or synthetic examples and review inappropriate replies, missed replies, and tone mismatches.
+
+## Consent and data handling
+
+Use synthetic chat exports for a public demo. Obtain explicit consent before using real conversations as examples or involving a contact in a test. The contact allowlist limits who can receive automated replies. Chat exports, the retrieval index, and local logs can contain private information. Keep them out of shared demos. The model provider processes the content supplied for intent classification and reply generation.
 
 ---
 
@@ -56,8 +82,7 @@ flowchart TD
 
     FLASK --> DR
     DR -- DRY_RUN --> SIM["Simulated: Log to Console only"]
-    DR -- LIVE --> HD["Humanized Delay (Jitter)"]
-    HD --> WA
+    DR -- LIVE --> WA
 ```
 
 ---
@@ -113,10 +138,7 @@ Start the persistent Chroma vector store on port 8000:
 .\.venv\Scripts\chroma.exe run --path ./chroma_data --port 8000
 ```
 
-> **Note:** If you haven't yet indexed your chat exports into ChromaDB, run the ingestion script once:
-> ```powershell
-> .\.venv\Scripts\python.exe ingestion/chunk_and_embed.py
-> ```
+The repository contains separate components for [parsing exports](ingestion/parse_export.py) and [building the retrieval index](ingestion/embed_to_chroma.py).
 
 ### Terminal 2: Python Flask Bridge Server
 Start the HTTP bridge connecting Baileys to the Python decision engine:
@@ -152,12 +174,7 @@ The Streamlit dashboard (`console/app.py`) provides real-time observability and 
    - **`LIVE (Active Replies)`**: Responses are actively sent back over WhatsApp exclusively to contacts on your allowlist.
    - **Rule:** **Always start every fresh session in `DRY_RUN` mode** to verify decision quality and grounding retrieval traces before going live.
 
-2. **Humanized Delay Range:**
-   - Configure `min_delay_seconds` and `max_delay_seconds` in the sidebar.
-   - Adds natural random jitter before sending each message so responses do not appear robotic or instantaneous.
-   - Changes are atomically written to `config/settings.json`.
-
-3. **Emergency Kill Switch:**
+2. **Emergency Kill Switch:**
    - Click the prominent red **🛑 KILL SWITCH** button in the sidebar to halt all processing immediately.
    - Creates a `kill_switch.flag` file in the repo root.
    - A bright red warning banner will stay visible across the top of the dashboard. Both the Baileys client and the Python bridge will refuse to process or send any messages while engaged.
@@ -167,8 +184,4 @@ The Streamlit dashboard (`console/app.py`) provides real-time observability and 
 
 > [!CAUTION]
 > ### ⚠️ USE RESPONSIBLY
-> - **Terms of Service:** Baileys automates WhatsApp Web, which violates WhatsApp's Terms of Service.
-> - **Dedicated Number Only:** Never run this project on your primary, personal, or business phone number. **Use only a dedicated secondary or test number.**
-> - **Human-like Delays & Low Volume:** Keep message volume low and maintain conservative delay thresholds (`min_delay_seconds >= 3`, `max_delay_seconds >= 12`) to avoid triggering anti-spam automation detectors.
-> - **Explicit Consent:** Only allowlist and interact with friends, family, or test contacts who have explicitly consented to talking to an automated persona agent.
-> - **Ban Risk:** Aggressive, unattended, or unthrottled usage can result in your WhatsApp account being permanently banned.
+> The checked-in settings enable live mode. Switch the console to `DRY_RUN` before connecting a dedicated test account. Use test contacts who have explicitly agreed to interact with the prototype.
